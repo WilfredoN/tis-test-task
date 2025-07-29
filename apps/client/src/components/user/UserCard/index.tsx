@@ -30,7 +30,7 @@ export const UserCard = ({
   }
 
   return (
-    <div className='mx-auto flex w-full max-w-sm flex-col gap-2 rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-md'>
+    <div className='mx-auto flex w-full max-w-sm flex-col justify-between gap-2 rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-md'>
       <ProfileImage
         src={user.picture.large}
         alt={`${user.name.first} ${user.name.last}`}
