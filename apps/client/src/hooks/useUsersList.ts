@@ -17,66 +17,70 @@ export function useUsersList({ mode }: UseUsersListProps) {
   const queryClient = useQueryClient()
   const [savedUsers, setSavedUsers] = useState<UserWithWeather[]>([])
 
-  if (mode === 'all') {
-    const query = useInfiniteQuery<UserWithWeather[], Error>({
-      queryKey: ['users'],
-      queryFn: async ({ pageParam }: { pageParam?: unknown }) =>
-        fetchUsers(typeof pageParam === 'number' ? pageParam : 1),
-      getNextPageParam: (lastPage, allPages) => {
-        if (!lastPage || lastPage.length === 0) return undefined
-        return allPages.length + 1
-      },
-      refetchOnWindowFocus: false,
-      initialPageParam: 1
-    })
+  const infiniteQuery = useInfiniteQuery<UserWithWeather[], Error>({
+    queryKey: ['users'],
+    queryFn: async ({ pageParam }: { pageParam?: unknown }) =>
+      fetchUsers(typeof pageParam === 'number' ? pageParam : 1),
+    getNextPageParam: (lastPage, allPages) => {
+      if (!lastPage || lastPage.length === 0) return undefined
+      return allPages.length + 1
+    },
+    refetchOnWindowFocus: false,
+    initialPageParam: 1,
+    enabled: mode === 'all'
+  })
 
-    const handleSave = (savedUser: UserWithWeather) => {
-      // FIXME: infer types
-      queryClient.setQueryData(['users'], (oldData: any) => {
+  const savedQuery = useQuery<UserWithWeather[], Error>({
+    queryKey: ['saved-users'],
+    queryFn: fetchSavedUsers,
+    refetchOnWindowFocus: false,
+    enabled: mode === 'saved'
+  })
+
+  useEffect(() => {
+    if (mode === 'saved' && savedQuery.data) {
+      setSavedUsers(savedQuery.data)
+    }
+  }, [mode, savedQuery.data])
+
+  const handleSave = (user: UserWithWeather) => {
+    if (mode === 'all') {
+      queryClient.setQueryData<{
+        pages: UserWithWeather[][]
+        pageParams: unknown[]
+      }>(['users'], (oldData) => {
         if (!oldData || !oldData.pages) return oldData
         return {
           ...oldData,
-          pages: oldData.pages.map((page: UserWithWeather[]) =>
-            page.filter((user) => user.id !== savedUser.id)
+          pages: oldData.pages.map((page) =>
+            page.filter((user) => user.id !== user.id)
           )
         }
       })
-    }
-
-    return {
-      ...query,
-      users: query.data?.pages.flat() || [],
-      handleSave,
-      fetchNextPage: query.fetchNextPage,
-      hasNextPage: query.hasNextPage,
-      isFetchingNextPage: query.isFetchingNextPage
-    }
-  } else {
-    const query = useQuery<UserWithWeather[], Error>({
-      queryKey: ['saved-users'],
-      queryFn: fetchSavedUsers,
-      refetchOnWindowFocus: false
-    })
-
-    useEffect(() => {
-      if (query.data) {
-        setSavedUsers(query.data)
-      }
-    }, [query.data])
-
-    const handleSave = (removedUser: UserWithWeather) => {
-      setSavedUsers((prev) => prev.filter((user) => user.id !== removedUser.id))
-      queryClient.setQueryData(
+    } else {
+      setSavedUsers((prev) => prev.filter((u) => u.id !== user.id))
+      queryClient.setQueryData<UserWithWeather[] | undefined>(
         ['saved-users'],
-        (oldData: UserWithWeather[] | undefined) => {
+        (oldData) => {
           if (!oldData) return oldData
-          return oldData.filter((user) => user.id !== removedUser.id)
+          return oldData.filter((user) => user.id !== user.id)
         }
       )
     }
+  }
 
+  if (mode === 'all') {
     return {
-      ...query,
+      ...infiniteQuery,
+      users: infiniteQuery.data?.pages.flat() || [],
+      handleSave,
+      fetchNextPage: infiniteQuery.fetchNextPage,
+      hasNextPage: infiniteQuery.hasNextPage,
+      isFetchingNextPage: infiniteQuery.isFetchingNextPage
+    }
+  } else {
+    return {
+      ...savedQuery,
       users: savedUsers,
       handleSave,
       fetchNextPage: undefined,

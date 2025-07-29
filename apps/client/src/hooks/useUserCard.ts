@@ -27,7 +27,7 @@ export function useUserCard(
     } catch (error) {
       console.error('Failed to delete user:', error)
     }
-  }, [onSave, user.id])
+  }, [user.id])
 
   return { handleSave, isSaved, handleDelete }
 }
