@@ -17,7 +17,15 @@ export const UserCard = ({
   onSave,
   showSaveButton = true
 }: UserCardProps) => {
-  const { handleSave, isSaved } = useUserCard(user, onSave)
+  const { handleSave, handleDelete, isSaved } = useUserCard(user, onSave)
+
+  const handleButtonClick = () => {
+    if (isSaved) {
+      handleDelete()
+    } else {
+      handleSave()
+    }
+  }
 
   return (
     <div className='mx-auto flex w-full max-w-sm flex-col gap-2 rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-md'>
@@ -31,11 +39,10 @@ export const UserCard = ({
       {showSaveButton && (
         <div className='flex justify-center'>
           <button
-            onClick={handleSave}
-            disabled={isSaved}
+            onClick={handleButtonClick}
             className='cursor-pointer rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none'
           >
-            {isSaved ? 'User Saved' : 'Save User'}
+            {isSaved ? 'Remove User' : 'Save User'}
           </button>
         </div>
       )}

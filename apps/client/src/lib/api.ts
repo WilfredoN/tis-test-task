@@ -25,10 +25,20 @@ export const saveUser = async (user: UserWithWeather): Promise<void> => {
   }
 }
 
-export async function fetchSavedUsers(): Promise<UserWithWeather[]> {
+export const fetchSavedUsers = async (): Promise<UserWithWeather[]> => {
   const response = await fetch('/api/users/saved')
   if (!response.ok) {
     throw new Error(`Error: ${response.status}`)
   }
   return response.json()
+}
+
+export const deleteUser = async (id: string): Promise<void> => {
+  const response = await fetch(`/api/users/${id}`, {
+    method: 'DELETE'
+  })
+
+  if (!response.ok) {
+    throw new Error(`Error: ${response.status}`)
+  }
 }

@@ -1,6 +1,6 @@
-import { useCallback, useState } from 'react'
+import { deleteUser, saveUser } from '@/lib/api'
 import { UserWithWeather } from '@/types/user'
-import { saveUser } from '@/lib/api'
+import { useCallback, useState } from 'react'
 
 export function useUserCard(
   user: UserWithWeather,
@@ -20,5 +20,14 @@ export function useUserCard(
     }
   }, [onSave, user])
 
-  return { handleSave, isSaved }
+  const handleDelete = useCallback(async () => {
+    try {
+      await deleteUser(user.id)
+      setIsSaved(false)
+    } catch (error) {
+      console.error('Failed to delete user:', error)
+    }
+  }, [onSave, user.id])
+
+  return { handleSave, isSaved, handleDelete }
 }

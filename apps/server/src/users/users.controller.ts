@@ -1,27 +1,23 @@
 import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import { UserDTO } from 'src/users/dto/User';
 import { UsersService } from 'src/users/users.service';
-import { User } from 'src/users/entities/user.entity';
-import { CreateUserDto } from 'src/users/dto/User';
-import { WeatherCurrent } from 'src/users/dto/Weather';
 
 @Controller('users')
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
-  async getAll(): Promise<(User & { weather: WeatherCurrent | null })[]> {
+  async getAll(): Promise<UserDTO[]> {
     return this.usersService.getAll();
   }
 
   @Get('saved')
-  async getSavedUsers(): Promise<
-    (User & { weather: WeatherCurrent | null })[]
-  > {
+  async getSavedUsers(): Promise<UserDTO[]> {
     return this.usersService.getSavedUsers();
   }
 
   @Post()
-  async saveUser(@Body() user: CreateUserDto): Promise<User> {
+  async saveUser(@Body() user: UserDTO): Promise<UserDTO> {
     return this.usersService.saveUser(user);
   }
 

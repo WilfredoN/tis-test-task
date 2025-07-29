@@ -45,34 +45,14 @@ export interface Login {
   sha256: string
 }
 
-export interface Dob {
-  date: string
-  age: number
-}
-
-export interface Registered {
-  date: string
-  age: number
-}
-
-export interface Id {
-  name: string
-  value: string
-}
-
 export interface User {
+  id: string
   gender: string
   name: Name
   location: Location
   email: string
   login: Login
-  dob: Dob
-  registered: Registered
-  phone: string
-  cell: string
-  id: Id
   picture: Picture
-  nat: string
 }
 
 export interface WeatherData {

@@ -1,4 +1,5 @@
 import { Location } from 'src/users/dto/Location';
+import { WeatherCurrent } from 'src/users/dto/Weather';
 
 export class Name {
   title: string;
@@ -13,15 +14,16 @@ export class Picture {
 }
 
 export class UserDTO {
+  id: string;
   gender: string;
   name: Name;
   location: Location;
   email: string;
   picture: Picture;
+  weather?: WeatherCurrent | null;
 }
 
 export class CreateUserDto {
-  id: string;
   gender: string;
   name: {
     title: string;
@@ -49,6 +51,10 @@ export class CreateUserDto {
   };
   phone: string;
   cell: string;
+  id: {
+    name: string;
+    value: string;
+  };
   picture: Picture;
   nat: string;
 }
