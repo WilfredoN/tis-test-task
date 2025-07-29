@@ -1,9 +1,10 @@
 import { UserWithWeather } from "@/types/user";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-export const fetchUsers = async (): Promise<UserWithWeather[]> => {
-  const response = await fetch("/api/users");
+export const fetchUsers = async (
+  page: number = 1,
+  results: number = 10
+): Promise<UserWithWeather[]> => {
+  const response = await fetch(`/api/users?page=${page}&results=${results}`);
   if (!response.ok) {
     throw new Error(`Error: ${response.status}`);
   }
@@ -25,7 +26,7 @@ export const saveUser = async (user: UserWithWeather): Promise<void> => {
 };
 
 export async function fetchSavedUsers(): Promise<UserWithWeather[]> {
-  const response = await fetch(`${API_BASE_URL}/users/saved`);
+  const response = await fetch("/api/users/saved");
   if (!response.ok) {
     throw new Error(`Error: ${response.status}`);
   }

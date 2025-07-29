@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useState } from "react";
 
-export default function Header() {
+export const Header = () => {
   const [activeLink, setActiveLink] = useState("/");
 
   const handleLinkClick = (link: string) => {
@@ -41,4 +41,4 @@ export default function Header() {
       </div>
     </header>
   );
-}
+};
