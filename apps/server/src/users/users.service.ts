@@ -2,12 +2,11 @@ import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { CreateUserDto } from 'src/users/dto/User';
+import { WeatherCurrent } from 'src/users/dto/Weather';
 import { User } from 'src/users/entities/user.entity';
+import { WeatherService } from 'src/weather/weather.service';
 import { Repository } from 'typeorm';
-
 @Injectable()
 export class UsersService {
   constructor(
@@ -15,17 +14,43 @@ export class UsersService {
     private readonly configService: ConfigService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+    private readonly weatherService: WeatherService,
   ) {}
 
-  getAll(): Observable<User[]> {
+  async getAll(): Promise<(User & { weather: WeatherCurrent | null })[]> {
     const apiUrl = this.configService.get<string>('usersApi');
-    return this.httpService
-      .get<{ results: User[] }>(`${apiUrl}/?results=10`)
-      .pipe(map((response) => response.data.results));
+    const response = await this.httpService.axiosRef.get<{ results: User[] }>(
+      `${apiUrl}/?results=10`,
+    );
+    const users = response.data.results;
+    return this.mapUsersWithWeather(users);
   }
 
-  async getSavedUsers(): Promise<User[]> {
-    return this.userRepository.find();
+  async getSavedUsers(): Promise<
+    (User & { weather: WeatherCurrent | null })[]
+  > {
+    const users = await this.userRepository.find();
+    return this.mapUsersWithWeather(users);
+  }
+
+  private async mapUsersWithWeather(
+    users: User[],
+  ): Promise<(User & { weather: WeatherCurrent | null })[]> {
+    return Promise.all(
+      users.map(async (user) => {
+        try {
+          const lat = parseFloat(user.location.coordinates.latitude);
+          const lon = parseFloat(user.location.coordinates.longitude);
+          if (!isNaN(lat) && !isNaN(lon)) {
+            const weather = await this.weatherService.getWeather(lat, lon);
+            return { ...user, weather };
+          }
+        } catch {
+          console.error('Error fetching weather for user:', user.id);
+        }
+        return { ...user, weather: null };
+      }),
+    );
   }
 
   mapUser(rawData: CreateUserDto): Promise<User> {
