@@ -10,17 +10,19 @@ interface UserCardProps {
   user: UserWithWeather
   onSave?: (user: UserWithWeather) => void
   showSaveButton?: boolean
+  allowDelete?: boolean
 }
 
 export const UserCard = ({
   user,
   onSave,
-  showSaveButton = true
+  showSaveButton = true,
+  allowDelete = false
 }: UserCardProps) => {
   const { handleSave, handleDelete, isSaved } = useUserCard(user, onSave)
 
   const handleButtonClick = () => {
-    if (isSaved) {
+    if (isSaved || allowDelete) {
       handleDelete()
     } else {
       handleSave()
@@ -42,7 +44,7 @@ export const UserCard = ({
             onClick={handleButtonClick}
             className='cursor-pointer rounded-lg bg-blue-600 px-6 py-2 font-medium text-white transition-colors duration-200 hover:bg-blue-700 focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:outline-none'
           >
-            {isSaved ? 'Remove User' : 'Save User'}
+            {isSaved || allowDelete ? 'Remove User' : 'Save User'}
           </button>
         </div>
       )}
