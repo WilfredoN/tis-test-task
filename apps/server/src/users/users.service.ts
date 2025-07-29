@@ -45,8 +45,8 @@ export class UsersService {
             const weather = await this.weatherService.getWeather(lat, lon);
             return { ...user, weather };
           }
-        } catch {
-          console.error('Error fetching weather for user:', user.id);
+        } catch (error) {
+          console.error('Error fetching weather for user:', user.id, error);
         }
         return { ...user, weather: null };
       }),
@@ -55,7 +55,7 @@ export class UsersService {
 
   mapUser(rawData: CreateUserDto): Promise<User> {
     const user = new User();
-    user.id = rawData.login.uuid;
+    user.id = rawData.id;
     user.gender = rawData.gender;
     user.name = rawData.name;
     user.location = rawData.location;

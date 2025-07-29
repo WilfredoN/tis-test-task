@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useState } from 'react'
 import { UserWithWeather } from '@/types/user'
 import { saveUser } from '@/lib/api'
 
@@ -6,9 +6,12 @@ export function useUserCard(
   user: UserWithWeather,
   onSave?: (user: UserWithWeather) => void
 ) {
+  const [isSaved, setIsSaved] = useState(false)
+
   const handleSave = useCallback(async () => {
     try {
       await saveUser(user)
+      setIsSaved(true)
       if (onSave) {
         onSave(user)
       }
@@ -17,5 +20,5 @@ export function useUserCard(
     }
   }, [onSave, user])
 
-  return { handleSave }
+  return { handleSave, isSaved }
 }

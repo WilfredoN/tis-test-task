@@ -77,8 +77,9 @@ export interface User {
 
 export interface WeatherData {
   temperature: number
-  min: number
-  max: number
+  temperatureMin: number
+  temperatureMax: number
+  windSpeed: number
   icon: string
 }
 

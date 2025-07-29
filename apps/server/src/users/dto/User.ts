@@ -21,6 +21,7 @@ export class UserDTO {
 }
 
 export class CreateUserDto {
+  id: string;
   gender: string;
   name: {
     title: string;
@@ -48,10 +49,6 @@ export class CreateUserDto {
   };
   phone: string;
   cell: string;
-  id: {
-    name: string;
-    value: string;
-  };
   picture: Picture;
   nat: string;
 }

@@ -7,6 +7,13 @@ export interface WeatherCurrent {
   time: string;
 }
 
+export interface WeatherDaily {
+  temperature_2m_min: number[];
+  temperature_2m_max: number[];
+  weathercode: number[];
+  time: string[];
+}
+
 export interface WeatherApiResponse {
   latitude: number;
   longitude: number;
@@ -16,4 +23,5 @@ export interface WeatherApiResponse {
   timezone_abbreviation: string;
   elevation: number;
   current_weather: WeatherCurrent;
+  daily?: WeatherDaily;
 }
