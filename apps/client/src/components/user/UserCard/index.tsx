@@ -27,6 +27,9 @@ export const UserCard = ({
     } else {
       handleSave()
     }
+    if (onSave) {
+      onSave(user)
+    }
   }
 
   return (
