@@ -1,6 +1,6 @@
-import { useCallback } from "react";
-import { UserWithWeather } from "@/types/user";
-import { saveUser } from "@/lib/api";
+import { useCallback } from 'react'
+import { UserWithWeather } from '@/types/user'
+import { saveUser } from '@/lib/api'
 
 export function useUserCard(
   user: UserWithWeather,
@@ -8,14 +8,14 @@ export function useUserCard(
 ) {
   const handleSave = useCallback(async () => {
     try {
-      await saveUser(user);
+      await saveUser(user)
       if (onSave) {
-        onSave(user);
+        onSave(user)
       }
     } catch (error) {
-      console.error("Failed to save user:", error);
+      console.error('Failed to save user:', error)
     }
-  }, [onSave, user]);
+  }, [onSave, user])
 
-  return { handleSave };
+  return { handleSave }
 }

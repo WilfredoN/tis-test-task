@@ -1,17 +1,17 @@
-import { UserWithWeather } from "@/types/user";
+import { UserWithWeather } from '@/types/user'
 
 export const UserInfo = ({
   name,
-  gender,
+  gender
 }: {
-  name: UserWithWeather["name"];
-  gender: string;
+  name: UserWithWeather['name']
+  gender: string
 }) => {
-  const fullName = `${name.title} ${name.first} ${name.last}`;
+  const fullName = `${name.title} ${name.first} ${name.last}`
   return (
-    <div className="text-center mb-4">
-      <h3 className="text-xl font-bold text-white mb-1">{fullName}</h3>
-      <p className="text-sm text-gray-300 capitalize mb-2">{gender}</p>
+    <div className='mb-4 text-center'>
+      <h3 className='mb-1 text-xl font-bold text-white'>{fullName}</h3>
+      <p className='mb-2 text-sm text-gray-300 capitalize'>{gender}</p>
     </div>
-  );
-};
+  )
+}
