@@ -44,4 +44,8 @@ export class UsersService {
     const savedUser = await this.mapUser(user);
     return this.userRepository.save(savedUser);
   }
+
+  async deleteUser(id: string): Promise<void> {
+    await this.userRepository.delete(id);
+  }
 }
