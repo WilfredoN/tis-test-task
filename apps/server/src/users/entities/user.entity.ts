@@ -7,7 +7,7 @@ export class User {
   @PrimaryColumn()
   id: string;
 
-  @Column()
+  @Column({ type: 'json' })
   name: Name;
 
   @Column({ type: 'json' })
