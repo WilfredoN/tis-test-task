@@ -23,3 +23,16 @@
 ## Was AI used?
 
 > Yes, I was using AI to get well with Nest, to fix (and unfortunatelly sometimes create) bugs and make some project structure refactor sometimes. but even thou I spend more time that planned, I learnt a lot about complex node full stack application stack usage, as before I worked mostly with Java on Back-End and Firebase/Supabase.
+
+## Sreenshots:
+
+<table>
+    <tr>
+        <td><strong>Loading state</strong><br><img src="assets/loading.png" width="500"/></td>
+        <td><strong>List of users</strong><br><img src="assets/list.png" width="500"/></td>
+    </tr>
+</table>
+
+**Demo:**
+
+<img src="./assets/footage.gif" width="50%" height="50%" />

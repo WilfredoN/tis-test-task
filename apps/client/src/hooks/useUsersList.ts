@@ -43,7 +43,7 @@ export function useUsersList({ mode }: UseUsersListProps) {
     }
   }, [mode, savedQuery.data])
 
-  const handleSave = (user: UserWithWeather) => {
+  const handleSave = (savedUser: UserWithWeather) => {
     if (mode === 'all') {
       queryClient.setQueryData<{
         pages: UserWithWeather[][]
@@ -53,17 +53,17 @@ export function useUsersList({ mode }: UseUsersListProps) {
         return {
           ...oldData,
           pages: oldData.pages.map((page) =>
-            page.filter((user) => user.id !== user.id)
+            page.filter((user) => user.id !== savedUser.id)
           )
         }
       })
     } else {
-      setSavedUsers((prev) => prev.filter((u) => u.id !== user.id))
+      setSavedUsers((prev) => prev.filter((user) => user.id !== savedUser.id))
       queryClient.setQueryData<UserWithWeather[] | undefined>(
         ['saved-users'],
         (oldData) => {
           if (!oldData) return oldData
-          return oldData.filter((user) => user.id !== user.id)
+          return oldData.filter((user) => user.id !== savedUser.id)
         }
       )
     }
