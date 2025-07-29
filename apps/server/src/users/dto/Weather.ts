@@ -25,3 +25,11 @@ export interface WeatherApiResponse {
   current_weather: WeatherCurrent;
   daily?: WeatherDaily;
 }
+
+export interface WeatherDTO {
+  temperature: number;
+  temperatureMin: number | null;
+  temperatureMax: number | null;
+  windSpeed: number;
+  icon: string | number;
+}

@@ -1,7 +1,7 @@
+import { HttpService } from '@nestjs/axios';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { HttpService } from '@nestjs/axios';
-import { WeatherApiResponse, WeatherCurrent } from 'src/users/dto/Weather';
+import { WeatherApiResponse, WeatherDTO } from 'src/users/dto/Weather';
 
 @Injectable()
 export class WeatherService {
@@ -10,7 +10,7 @@ export class WeatherService {
     private readonly configService: ConfigService,
   ) {}
 
-  async getWeather(latitude: number, longitude: number): Promise<any> {
+  async getWeather(latitude: number, longitude: number): Promise<WeatherDTO> {
     const baseUrl = this.configService.get<string>('weatherApi');
     const url = `${baseUrl}?latitude=${latitude}&longitude=${longitude}&current_weather=true&daily=temperature_2m_min,temperature_2m_max,weathercode&timezone=auto`;
 
@@ -18,28 +18,44 @@ export class WeatherService {
       await this.httpService.axiosRef.get<WeatherApiResponse>(url);
     const { current_weather, daily } = response.data;
 
-    const weatherCodeToIcon = (code: number) => {
-      if (code === 0) return '☀️';
-      if ([1, 2, 3].includes(code)) return '🌤️';
-      if ([45, 48].includes(code)) return '🌫️';
-      if ([51, 53, 55].includes(code)) return '🌦️';
-      if ([56, 57].includes(code)) return '🌧️❄️';
-      if ([61, 63, 65].includes(code)) return '🌧️';
-      if ([66, 67].includes(code)) return '🌧️❄️';
-      if ([71, 73, 75].includes(code)) return '❄️';
-      if (code === 77) return '🌨️';
-      if ([80, 81, 82].includes(code)) return '🌦️';
-      if ([85, 86].includes(code)) return '🌨️';
-      if (code === 95) return '⛈️';
-      if ([96, 99].includes(code)) return '⛈️❄️';
-      return code;
+    const weatherCodeToIcon = (code: number): string => {
+      const weatherIcons: Record<number, string> = {
+        0: '☀️',
+        1: '🌤️',
+        2: '⛅',
+        3: '☁️',
+        45: '🌫️',
+        48: '🌫️',
+        51: '🌦️',
+        53: '🌦️',
+        55: '🌦️',
+        56: '🌧️',
+        57: '🌧️',
+        61: '🌧️',
+        63: '🌧️',
+        65: '🌧️',
+        66: '❄️',
+        67: '❄️',
+        71: '❄️',
+        73: '❄️',
+        75: '❄️',
+        77: '❄️',
+        80: '🌧️',
+        81: '🌧️',
+        82: '🌧️',
+        85: '❄️',
+        86: '❄️',
+        95: '⛈️',
+        96: '⛈️',
+        99: '⛈️',
+      };
+      return weatherIcons[code] || '❓';
     };
 
-    const todayIdx = 0;
     return {
       temperature: current_weather.temperature,
-      temperatureMin: daily?.temperature_2m_min?.[todayIdx] ?? null,
-      temperatureMax: daily?.temperature_2m_max?.[todayIdx] ?? null,
+      temperatureMin: daily?.temperature_2m_min?.[0] || null,
+      temperatureMax: daily?.temperature_2m_max?.[0] || null,
       windSpeed: current_weather.windspeed,
       icon: weatherCodeToIcon(current_weather.weathercode),
     };
