@@ -1,7 +1,8 @@
-import { Controller, Get } from '@nestjs/common';
+import { Body, Controller, Get, Post } from '@nestjs/common';
 import { UsersService } from 'src/users/users.service';
 import { Observable } from 'rxjs';
 import { User } from 'src/users/entities/user.entity';
+import { CreateUserDto } from 'src/users/dto/User';
 
 @Controller('users')
 export class UsersController {
@@ -10,5 +11,15 @@ export class UsersController {
   @Get()
   getAll(): Observable<User[]> {
     return this.usersService.getAll();
+  }
+
+  @Get('saved')
+  async getSavedUsers(): Promise<User[]> {
+    return this.usersService.getSavedUsers();
+  }
+
+  @Post()
+  async saveUser(@Body() user: CreateUserDto): Promise<User> {
+    return this.usersService.saveUser(user);
   }
 }
