@@ -2,6 +2,10 @@
 
 ## Author: Nikita Afanasiev
 
+## Current deployments:
+Front-End: https://tis-test-task.vercel.app
+Back-End: https://tis-test-task.onrender.com
+
 ## Main goals
 
 1. Realize the full-stack application with Next.js + Nest.js in monorepo architecture.
